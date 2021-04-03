@@ -8,41 +8,55 @@ app.use(express.json());
 
 // Get All Restaurants
 app.get('/api/v1/restaurants', async (req, res) => {
-  const restaurants = await db.query('SELECT * FROM restaurants;');
-  console.log(
-    '🚀 ~ file: server.js ~ line 12 ~ app.get ~ restaurants',
-    restaurants
+  const restaurants = await db.query('SELECT * FROM restaurants');
+
+  res.status(200).json({
+    status: 'success',
+    results: restaurants.rowCount,
+    data: { restaurants: restaurants.rows }
+  });
+});
+
+// Get One Restaurant
+app.get('/api/v1/restaurants/:id', async (req, res) => {
+  const restaurant = await db.query('SELECT * FROM restaurants WHERE id = $1', [
+    req.params.id
+  ]);
+
+  res
+    .status(200)
+    .json({ status: 'success', data: { restaurant: restaurant.rows[0] } });
+});
+
+// Create a Restaurant
+app.post('/api/v1/restaurants', async (req, res) => {
+  const response = await db.query(
+    'INSERT INTO restaurants (name, location, price_range) VALUES ($1, $2, $3) RETURNING *',
+    [req.body.name, req.body.location, req.body.price_range]
+  );
+
+  res
+    .status(201)
+    .json({ status: 'success', data: { restaurant: response.rows[0] } });
+});
+
+// Update a Restaurant
+app.put('/api/v1/restaurants/:id', async (req, res) => {
+  const response = await db.query(
+    'UPDATE restaurants SET name = $1, location = $2, price_range = $3 WHERE id = $4 RETURNING *',
+    [req.body.name, req.body.location, req.body.price_range, req.params.id]
   );
 
   res
     .status(200)
-    .json({ status: 'success', data: { restaurants: ['mcdonalds, wendys'] } });
-});
-
-// Get One Restaurant
-app.get('/api/v1/restaurants/:id', (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', data: { restaurant: 'mcdonalds' } });
-});
-
-// Create a Restaurant
-app.post('/api/v1/restaurants', (req, res) => {
-  res
-    .status(201)
-    .json({ status: 'success', data: { restaurant: req.body.name } });
-});
-
-// Update a Restaurant
-app.put('/api/v1/restaurants/:id', (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', data: { restaurant: req.body.name } });
+    .json({ status: 'success', data: { restaurant: response.rows[0] } });
 });
 
 // Delete a Restaurant
-app.delete('/api/v1/restaurants/:id', (req, res) => {
-  res.status(204).json({ status: 'success' });
+app.delete('/api/v1/restaurants/:id', async (req, res) => {
+  await db.query('DELETE FROM restaurants WHERE id = $1', [req.params.id]);
+
+  res.status(204).send({});
 });
 
 const port = process.env.PORT || 3001;
