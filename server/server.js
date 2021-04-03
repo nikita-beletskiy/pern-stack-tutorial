@@ -1,12 +1,19 @@
 require('dotenv').config();
 const express = require('express');
+const db = require('./db');
 
 const app = express();
 
 app.use(express.json());
 
 // Get All Restaurants
-app.get('/api/v1/restaurants', (req, res) => {
+app.get('/api/v1/restaurants', async (req, res) => {
+  const restaurants = await db.query('SELECT * FROM restaurants;');
+  console.log(
+    '🚀 ~ file: server.js ~ line 12 ~ app.get ~ restaurants',
+    restaurants
+  );
+
   res
     .status(200)
     .json({ status: 'success', data: { restaurants: ['mcdonalds, wendys'] } });
