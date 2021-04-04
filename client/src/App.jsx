@@ -4,13 +4,15 @@ import Restaurant from './routes/Restaurant';
 import Update from './routes/Update';
 
 const App = () => (
-  <Router>
-    <Switch>
-      <Route exact path='/' component={Home} />
-      <Route exact path='/restaurants/:id' component={Restaurant} />
-      <Route exact path='/restaurants/:id/update' component={Update} />
-    </Switch>
-  </Router>
+  <div className='container'>
+    <Router>
+      <Switch>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/restaurants/:id' component={Restaurant} />
+        <Route exact path='/restaurants/:id/update' component={Update} />
+      </Switch>
+    </Router>
+  </div>
 );
 
 export default App;
