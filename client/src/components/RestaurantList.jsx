@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import RestaurantFinder from '../api/RestaurantFinder';
 import { RestaurantsContext } from '../contexts/RestaurantsContext';
 

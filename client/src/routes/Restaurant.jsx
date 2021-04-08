@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import RestaurantFinder from '../api/RestaurantFinder';
 import AddReview from '../components/AddReview';
 import Reviews from '../components/Reviews';
