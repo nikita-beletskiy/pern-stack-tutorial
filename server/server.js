@@ -25,9 +25,15 @@ app.get('/api/v1/restaurants/:id', async (req, res) => {
     req.params.id
   ]);
 
-  res
-    .status(200)
-    .json({ status: 'success', data: { restaurant: restaurant.rows[0] } });
+  const reviews = await db.query(
+    'SELECT * FROM reviews WHERE restaurant_id =$1',
+    [req.params.id]
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: { restaurant: { ...restaurant.rows[0], reviews: reviews.rows } }
+  });
 });
 
 // Create a Restaurant

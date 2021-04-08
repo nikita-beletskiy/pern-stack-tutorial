@@ -18,13 +18,19 @@ const RestaurantList = () => {
     fetchData();
   }, [setRestaurants]);
 
-  const handleDelete = async id => {
+  const handleDelete = async (event, id) => {
+    event.stopPropagation();
     await RestaurantFinder.delete(`/${id}`);
     deleteRestaurant(id);
   };
 
-  const handleUpdate = id => {
+  const handleUpdate = (event, id) => {
+    event.stopPropagation();
     history.push(`/restaurants/${id}/update`);
+  };
+
+  const handleSelect = id => {
+    history.push(`/restaurants/${id}`);
   };
 
   return (
@@ -43,14 +49,17 @@ const RestaurantList = () => {
         <tbody>
           {restaurants &&
             restaurants.map(restaurant => (
-              <tr key={restaurant.id}>
+              <tr
+                onClick={() => handleSelect(restaurant.id)}
+                key={restaurant.id}
+              >
                 <td>{restaurant.name}</td>
                 <td>{restaurant.location}</td>
                 <td>{'$'.repeat(restaurant.price_range)}</td>
                 <td>Ratings</td>
                 <td>
                   <button
-                    onClick={() => handleUpdate(restaurant.id)}
+                    onClick={e => handleUpdate(e, restaurant.id)}
                     className='btn btn-warning'
                   >
                     Update
@@ -58,7 +67,7 @@ const RestaurantList = () => {
                 </td>
                 <td>
                   <button
-                    onClick={() => handleDelete(restaurant.id)}
+                    onClick={e => handleDelete(e, restaurant.id)}
                     className='btn btn-danger'
                   >
                     Delete
