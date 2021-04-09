@@ -27,24 +27,17 @@ const Restaurant = () => {
         <>
           <h1 className='text-center display-1'>{selectedRestaurant.name}</h1>
 
-          {selectedRestaurant.reviews.length > 0 && (
-            <div className='mt-3'>
-              <div className='text-center text-warning'>
-                <StarRating
-                  rating={
-                    selectedRestaurant.reviews
-                      .map(review => review.rating)
-                      .reduce((acc, cur) => acc + cur) /
-                    selectedRestaurant.reviews.length
-                  }
-                />
-                ({selectedRestaurant.reviews.length})
-              </div>
-              <div className='mt-3'>
-                <Reviews reviews={selectedRestaurant.reviews} />
-              </div>
+          <div className='mt-3'>
+            <div className='text-center'>
+              <StarRating rating={selectedRestaurant.average_rating} />
+              <span className='text-warning ml-1'>
+                ({selectedRestaurant.count || 0})
+              </span>
             </div>
-          )}
+            <div className='mt-3'>
+              <Reviews reviews={selectedRestaurant.reviews} />
+            </div>
+          </div>
 
           <AddReview />
         </>
